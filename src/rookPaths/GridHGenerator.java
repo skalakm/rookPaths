@@ -1,5 +1,7 @@
 package rookPaths;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -12,13 +14,10 @@ public class GridHGenerator {
 	private int rFilled[];
 	private final int row = 4;
 	private final int col = 4;
-	private final int depth = 6;
-	public long valid_paths; // This will have to change to BigInteger
-	public static ArrayList<Integer> path;
+	private final int depth = 3;
+	private static ArrayList<Integer> path;
 	private static int MAX_SIZE;
-	private long eval = 0;
 	private static HashSet<Integer> explored;
-	private boolean overflow = false;
 
 	public GridHGenerator() {
 		grid = new int[row][col];
@@ -28,21 +27,16 @@ public class GridHGenerator {
 		explored = new HashSet<Integer>();
 	}
 
-	public void init(int num, int num1) {
-		/*
-		 * row = num; col = num1; grid = new int[row][col]; cFilled = new
-		 * int[row]; rFilled = new int[col]; eval = 0;
-		 */
-	}
-
-	public static void main(String args[]) {
+	public static void main(String args[]) throws FileNotFoundException {
 		// the input format is row, col, path
 		GridHGenerator test = new GridHGenerator();
+		PrintWriter writer = new PrintWriter("generatedPaths.txt");
 		MAX_SIZE = test.row * test.col;
 		test.initialize();
 		explored.add(0);
 		path.add(0);
-		test.generatePath(0, 0, path, explored);
+		test.generatePath(0, 0, path, explored, writer);
+		writer.close();
 	}
 
 	private void initialize() {
@@ -59,49 +53,28 @@ public class GridHGenerator {
 
 	}
 
-	private void generatePath(int i, int j, ArrayList<Integer> path, HashSet<Integer> explored) {
-		eval++;
-
+	private void generatePath(int i, int j, ArrayList<Integer> path, HashSet<Integer> explored, PrintWriter writer) {
 		ArrayList<Integer> moves = validCells(i, j);
-		/*
-		 * if (eval < 100) { System.out.println(i + " " + j + " " + grid[i][j] +
-		 * moves.toString() + "  Path: " + path.toString()); } if (path.size()
-		 * >= 15) { // System.out.println(path + " Outside" + path.size() +
-		 * " moves: " + // moves.toString()); }
-		 */
 		if (path.size() == depth) {
 			String data = row + " " + col + " " + pathGenerator(path);
 			System.out.println(data);
+			writer.println(data);
 		} else if (path.size() >= depth || moves.size() == 0
 				|| (path.size() != 0 && path.get(path.size() - 1) == (MAX_SIZE - col))) {
 			return;
 		} else {
-			// System.out.println("Node: " + grid[i][j]);
-			// System.out.print("Contents of explored: ");
-			// System.out.println("Size of moves: " + moves.size());
-			// for (Integer num : moves) {
-			// System.out.print(" " + num + " ");
-			// }
-			// System.out.print("\n");
 			for (Integer num : moves) {
 				if ((!explored.contains(num)) && !colFilled(num / col) && !rowFilled(num % col)) {
 					path.add(num);
 					explored.add(num);
 					cFilled[num / col]++;
 					rFilled[num % col]++;
-					// System.out.println("Passing: " + (path + " &" + num));
-					generatePath(num / col, num % col, path, explored);
+					generatePath(num / col, num % col, path, explored, writer);
 					path.remove(num);
 					explored.remove(num);
 					cFilled[num / col]--;
 					rFilled[num % col]--;
-					// System.out.println(path);
 				}
-				// else {
-				// System.out.println("Conatins: " + num);
-				// }
-				// paths.add(path);
-
 			}
 		}
 	}
