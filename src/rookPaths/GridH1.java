@@ -42,7 +42,8 @@ public class GridH1 {
 		// System.out.println(path.get(path.size() - 1) / test.col);
 		// System.out.println(path.get(path.size() - 1) % test.col);
 		// System.out
-		// .println("val" + test.grid[path.get(path.size() - 1) / test.col][path.get(path.size() - 1) % test.col]);
+		// .println("val" + test.grid[path.get(path.size() - 1) /
+		// test.col][path.get(path.size() - 1) % test.col]);
 
 		test.generatePath(path.get(path.size() - 1) / test.col, path.get(path.size() - 1) % test.col, path, explored);
 		System.out.println(test.row + ", " + test.col + ", " + test.eval + ", " + test.valid_paths + ", "

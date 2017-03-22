@@ -12,7 +12,7 @@ public class GridHGenerator {
 	private int rFilled[];
 	private final int row = 4;
 	private final int col = 4;
-	private final int depth = 4;
+	private final int depth = 6;
 	public long valid_paths; // This will have to change to BigInteger
 	public static ArrayList<Integer> path;
 	private static int MAX_SIZE;
@@ -21,10 +21,11 @@ public class GridHGenerator {
 	private boolean overflow = false;
 
 	public GridHGenerator() {
-		grid = new int[n][col];
+		grid = new int[row][col];
 		cFilled = new int[row];
 		rFilled = new int[col];
 		path = new ArrayList<Integer>();
+		explored = new HashSet<Integer>();
 	}
 
 	public void init(int num, int num1) {
@@ -36,13 +37,12 @@ public class GridHGenerator {
 
 	public static void main(String args[]) {
 		// the input format is row, col, path
-		GridH1 test = new GridH1();
-		
-		test.init(test.row, test.col);
+		GridHGenerator test = new GridHGenerator();
 		MAX_SIZE = test.row * test.col;
 		test.initialize();
+		explored.add(0);
+		path.add(0);
 		test.generatePath(0, 0, path, explored);
-		e
 	}
 
 	private void initialize() {
@@ -69,8 +69,9 @@ public class GridHGenerator {
 		 * >= 15) { // System.out.println(path + " Outside" + path.size() +
 		 * " moves: " + // moves.toString()); }
 		 */
-		if ((path.size() == depth) && path.get(path.size() - 1) == (MAX_SIZE - col)) {
-			System.out.println(path);
+		if (path.size() == depth) {
+			String data = row + " " + col + " " + pathGenerator(path);
+			System.out.println(data);
 		} else if (path.size() >= depth || moves.size() == 0
 				|| (path.size() != 0 && path.get(path.size() - 1) == (MAX_SIZE - col))) {
 			return;
@@ -103,6 +104,14 @@ public class GridHGenerator {
 
 			}
 		}
+	}
+
+	private String pathGenerator(ArrayList<Integer> path2) {
+		String path = "";
+		for (int i = 0; i < path2.size(); i++) {
+			path = path + path2.get(i) + ",";
+		}
+		return path;
 	}
 
 	private ArrayList<Integer> validCells(int i, int j) {
