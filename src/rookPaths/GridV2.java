@@ -1,41 +1,32 @@
-package n3grid;
+package rookPaths;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 
 /**
- * The fourth implementation to solve the SAW grid problem Has both the row and
- * col for the greater than rows and cols
+ * The second implementation to solve the SAW grid problem
  * 
  * @author Ashir Borah
  *
  */
-public class GridV4 {
+public class GridV2 {
 	private int grid[][];
-	private int cFilled[];
-	private int rFilled[];
 	private int n;
-	private final int col = 5;
+	private final int col = 10;
 	public ArrayList<String> paths;
 	private static int MAX_SIZE;
 	private static long eval = 0;
 
-	public GridV4(int num) {
+	public GridV2(int num) {
 		n = num;
 		grid = new int[n][col];
-		cFilled = new int[n];
-		rFilled = new int[col];
 		paths = new ArrayList<String>();
 	}
 
 	public static void main(String args[]) {
 		for (int i = 1; i < 10; i++) {
 			long startTime = System.currentTimeMillis();
-			GridV4 test = new GridV4(i);
+			GridV2 test = new GridV2(i);
 			MAX_SIZE = test.n * test.col;
 			test.initialize();
 			HashSet<Integer> explored = new HashSet<Integer>();
@@ -84,16 +75,13 @@ public class GridV4 {
 			return;
 		} else {
 			for (Integer num : moves) {
-				if ((!path.contains(num)) && !colGreaterFilled(num / col) && !rowGreaterFilled(num % col)) {
+				if ((!path.contains(num))) {
 					path.add(num);
 					explored.add(num);
-					cFilled[num / col]++;
-					rFilled[num % col]++;
+
 					generatePath(num / col, num % col, path, explored);
 					path.remove(num);
 					explored.remove(num);
-					cFilled[num / col]--;
-					rFilled[num % col]--;
 				}
 			}
 		}
@@ -144,40 +132,5 @@ public class GridV4 {
 			str = str + arr.get(i) + " ";
 		}
 		return str;
-	}
-
-	/**
-	 * The function checking if any columns greater than itself has been
-	 * completely filled.
-	 * 
-	 * @param j
-	 *            Column number
-	 * @return true if filled, false otherwise
-	 */
-	private boolean colGreaterFilled(int j) {
-		for (int i = n - 1; i > j; i--) {
-			if (cFilled[i] >= col) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * The function checking if any rows greater than itself has been completely
-	 * filled.
-	 * 
-	 * @param i
-	 *            Row number
-	 * @return true if filled, false otherwise
-	 */
-
-	private boolean rowGreaterFilled(int i) {
-		for (int j = i; j >= 0; j--) {
-			if (rFilled[j] >= n) {
-				return true;
-			}
-		}
-		return false;
 	}
 }

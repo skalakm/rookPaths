@@ -1,4 +1,4 @@
-package n3grid;
+package rookPaths;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,7 +18,7 @@ public class GridV5 {
 	private int cFilled[];
 	private int rFilled[];
 	private int n;
-	private final int col = 10;
+	private final int col = 4;
 	public ArrayList<String> paths;
 	private static int MAX_SIZE;
 	private static int eval = 0;
@@ -56,9 +56,9 @@ public class GridV5 {
 		}
 		for (int i = col - 1; i >= 0; i--) {
 			for (int j = 0; j < n; j++) {
-				System.out.print(grid[j][i] + "\t");
+				//System.out.print(grid[j][i] + "\t");
 			}
-			System.out.println();
+			//System.out.println();
 		}
 	}
 

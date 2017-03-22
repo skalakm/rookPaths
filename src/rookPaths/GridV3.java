@@ -1,4 +1,4 @@
-package n3grid;
+package rookPaths;
 
 import java.io.File;
 import java.io.FileNotFoundException;

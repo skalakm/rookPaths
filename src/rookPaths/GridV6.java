@@ -1,4 +1,4 @@
-package n3grid;
+package rookPaths;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,19 +8,19 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 /*
- * Has both the row and col for the greater than rows and cols with loop and improved col and row cut offs
+ * Has both the row and col for the greater than rows and cols
  */
-public class GridV7 {
+public class GridV6 {
 	private int grid[][];
 	private int cFilled[];
 	private int rFilled[];
 	private int n;
-	private final int col = 10;
+	private final int col = 7;
 	public ArrayList<String> paths;
 	private static int MAX_SIZE;
 	private static int eval = 0;
 
-	public GridV7(int num) {
+	public GridV6(int num) {
 		n = num;
 		grid = new int[n][col];
 		cFilled = new int[n];
@@ -29,9 +29,9 @@ public class GridV7 {
 	}
 
 	public static void main(String args[]) throws FileNotFoundException {
-		for (int i = 1; i < 6; i++) {
+		for (int i = 1; i < 7; i++) {
 			eval = 0;
-			GridV7 test = new GridV7(i);
+			GridV6 test = new GridV6(i);
 			MAX_SIZE = test.n * test.col;
 			// PrintWriter wr = new PrintWriter(new File("gridOutput" + test.n +
 			// "Modfied2.txt"));
@@ -81,7 +81,7 @@ public class GridV7 {
 			// }
 			// System.out.print("\n");
 			for (Integer num : moves) {
-				if ((!path.contains(num)) && !colFilled(num / col) && !rowFilled(num % col)) {
+				if ((!path.contains(num)) && !colGreaterFilled(num / col) && !rowGreaterFilled(num % col)) {
 					path.add(num);
 					explored.add(num);
 					cFilled[num / col]++;
@@ -134,37 +134,21 @@ public class GridV7 {
 		return str;
 	}
 
-	private boolean colFilled(int j) {
+	private boolean colGreaterFilled(int j) {
 		for (int i = n - 1; i > j; i--) {
 			if (cFilled[i] >= col) {
 				return true;
 			}
 		}
-		boolean lesserFilled = false;
-		for (int i = j - 1; i > 0; i--) {
-			if (cFilled[i] >= col && !lesserFilled) {
-				lesserFilled = true;// a column was filled
-			} else if (cFilled[i] != col && lesserFilled) {
-				return true;// something was filled but this has not been filled
-			}
-		}
 		return false;
 	}
 
-	private boolean rowFilled(int i) {
+	private boolean rowGreaterFilled(int i) {
 		/*
 		 * The
 		 */
 		for (int j = i; j >= 0; j--) {
 			if (rFilled[j] >= n) {
-				return true;
-			}
-		}
-		boolean lesserFilled = false;
-		for (int j = i - 1; j > 0; j--) {
-			if (rFilled[j] >= n && !lesserFilled) {
-				lesserFilled = true;
-			} else if (rFilled[j] != n && lesserFilled) {
 				return true;
 			}
 		}

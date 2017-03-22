@@ -1,4 +1,4 @@
-package n3grid;
+package rookPaths;
 
 import java.util.ArrayList;
 
