@@ -12,9 +12,9 @@ public class GridHGenerator {
 	private int grid[][];
 	private int cFilled[];
 	private int rFilled[];
-	private final int row = 4;
-	private final int col = 4;
-	private final int depth = 3;
+	private final int row = 10;
+	private final int col = 10;
+	private final int depth = 20;
 	private static ArrayList<Integer> path;
 	private static int MAX_SIZE;
 	private static HashSet<Integer> explored;
