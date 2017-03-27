@@ -1,4 +1,4 @@
-package rookPaths;
+
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //This file is part of Jadoop
@@ -44,19 +44,25 @@ public class GridAssign {
 		// Create the job.
 		HadoopGridJob hgj = new HadoopGridJob("GridH1");
 
-		// Make the CoinFlipTask class file available on the cluster.
-		hgj.addFile(new File("GridH1.class"));
+                // Make the CoinFlipTask class file available on the cluster.
+                hgj.addFile(new File("examples/GridH1.class"));
 
 		/*
 		 * Add one command for each trial. Each command executes the
 		 * CoinFlipTask with an argument indicating the number of flips to
 		 * perform.
 		 */
+                
+                GridHGenerator.main(null);
 		File generatedPaths = new File("generatedPaths.txt");
 		Scanner in = new Scanner(generatedPaths);
 		int counter = 0;
 		while (in.hasNextLine()) {
-			HadoopGridTask hgt = new HadoopGridTask(in.nextLine());
+            String val = in.nextLine();
+            String taskName ="Trial "+ counter;
+            System.out.println("running task ("+ taskName+")");
+            System.out.println("java GridH1 "+ val);
+            HadoopGridTask hgt = new HadoopGridTask(taskName, "java GridH1 "+ val, true, false, 100000);
 			hgj.addTask(hgt);
 			counter++;
 		}
@@ -70,12 +76,18 @@ public class GridAssign {
 		 */
 		PrintWriter writer = new PrintWriter("output.txt");
 		int total = 0;
+                System.out.println("done with computati");
 		for (int t = 0; t < counter; t++) {
-			String key = "";
+            System.out.println(t);
+			String key = "Trial "+ t;
 			HadoopGridTask hgt = hgj.getTask(key);
 
-			writer(hgt.getStandardOutput());
+            writer.println(hgt.getStandardOutput());
+            System.out.println("out " +hgt.getStandardOutput());
+            System.out.println("error" + hgt.getStandardError());
+            System.out.println(hgt.hasTimedout());
 		}
 		System.out.println("Paths computed");
+                writer.close();
 	}
 }
