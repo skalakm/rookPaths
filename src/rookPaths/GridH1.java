@@ -1,4 +1,3 @@
-package rookPaths;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
