@@ -1,5 +1,3 @@
-
-
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -12,14 +10,17 @@ public class GridHGenerator {
 	private int grid[][];
 	private int cFilled[];
 	private int rFilled[];
-	private final int row = 10;
-	private final int col = 10;
-	private final int depth = 20;
+	private int row;
+	private int col;
+	private int depth;
 	private static ArrayList<Integer> path;
 	private static int MAX_SIZE;
 	private static HashSet<Integer> explored;
 
-	public GridHGenerator() {
+	public GridHGenerator(int row, int col, int depth) {
+		this.row = row;
+		this.col = col;
+		this.depth = depth;
 		grid = new int[row][col];
 		cFilled = new int[row];
 		rFilled = new int[col];
@@ -27,9 +28,9 @@ public class GridHGenerator {
 		explored = new HashSet<Integer>();
 	}
 
-	public static void main(String args[]) throws FileNotFoundException {
+	public static void generate(int row, int col, int depth) throws FileNotFoundException {
 		// the input format is row, col, path
-		GridHGenerator test = new GridHGenerator();
+		GridHGenerator test = new GridHGenerator(row, col, depth);
 		PrintWriter writer = new PrintWriter("generatedPaths.txt");
 		MAX_SIZE = test.row * test.col;
 		test.initialize();
@@ -121,7 +122,7 @@ public class GridHGenerator {
 	/**
 	 * The function checking if any column greater or less that itself has been
 	 * completely filled.
-	 * 
+	 *
 	 * @param j
 	 *            Column number
 	 * @return true if filled, false otherwise
@@ -146,7 +147,7 @@ public class GridHGenerator {
 	/**
 	 * The function checking if any row greater or less that itself has been
 	 * completely filled.
-	 * 
+	 *
 	 * @param i
 	 *            Row number
 	 * @return true if filled, false otherwise
