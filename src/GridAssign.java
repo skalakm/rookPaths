@@ -1,5 +1,4 @@
 
-
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //This file is part of Jadoop
 //Copyright (c) 2016 Grant Braught. All rights reserved.
@@ -22,6 +21,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.util.Scanner;
 
@@ -35,34 +35,37 @@ import jadoop.HadoopGridTask;
  */
 public class GridAssign {
 
-	private static final int TRIALS = 10;
-	private static final int FLIPS = 1000;
-
 	public static void main(String[] args) throws IOException, IllegalStateException, ClassNotFoundException,
 			InterruptedException, URISyntaxException {
 
 		// Create the job.
 		HadoopGridJob hgj = new HadoopGridJob("GridH1");
 
-                // Make the CoinFlipTask class file available on the cluster.
-                hgj.addFile(new File("examples/GridH1.class"));
+		// Make the CoinFlipTask class file available on the cluster.
+		hgj.addFile(new File("examples/GridH1.class"));
 
 		/*
 		 * Add one command for each trial. Each command executes the
 		 * CoinFlipTask with an argument indicating the number of flips to
 		 * perform.
 		 */
-                
-                GridHGenerator.main(null);
+		if (args.length < 3) {
+			System.out.println("The required arguments are: row col depth of generated path");
+			System.exit(-1);
+		}
+		int row = Integer.parseInt(args[0]);
+		int col = Integer.parseInt(args[1]);
+		int depth = Integer.parseInt(args[2]);
+		GridHGenerator.generate(row, col, depth);
 		File generatedPaths = new File("generatedPaths.txt");
 		Scanner in = new Scanner(generatedPaths);
 		int counter = 0;
 		while (in.hasNextLine()) {
-            String val = in.nextLine();
-            String taskName ="Trial "+ counter;
-            System.out.println("running task ("+ taskName+")");
-            System.out.println("java GridH1 "+ val);
-            HadoopGridTask hgt = new HadoopGridTask(taskName, "java GridH1 "+ val, true, false, 100000);
+			String val = in.nextLine();
+			String taskName = "Trial " + counter;
+			System.out.println("running task (" + taskName + ")");
+			System.out.println("java GridH1 " + val);
+			HadoopGridTask hgt = new HadoopGridTask(taskName, "java GridH1 " + val, true, false, 100000);
 			hgj.addTask(hgt);
 			counter++;
 		}
@@ -76,18 +79,21 @@ public class GridAssign {
 		 */
 		PrintWriter writer = new PrintWriter("output.txt");
 		int total = 0;
-                System.out.println("done with computati");
+		BigInteger totalPath = new BigInteger("0");
+		System.out.println("done with computati");
 		for (int t = 0; t < counter; t++) {
-            System.out.println(t);
-			String key = "Trial "+ t;
+			System.out.println(t);
+			String key = "Trial " + t;
 			HadoopGridTask hgt = hgj.getTask(key);
-
-            writer.println(hgt.getStandardOutput());
-            System.out.println("out " +hgt.getStandardOutput());
-            System.out.println("error" + hgt.getStandardError());
-            System.out.println(hgt.hasTimedout());
+			String str = hgt.getStandardOutput();
+			String[] tokens = str.split(",");
+			totalPath.add(new BigInteger(tokens[3]));
+			writer.println(hgt.getStandardOutput());
+			System.out.println("out " + str);
+			System.out.println("error" + str);
+			System.out.println(hgt.hasTimedout());
 		}
-		System.out.println("Paths computed");
-                writer.close();
+		System.out.println("Paths computed. It totals to" + totalPath);
+		writer.close();
 	}
 }
